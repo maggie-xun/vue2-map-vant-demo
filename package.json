@@ -8,14 +8,17 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^1.13.6",
     "core-js": "^3.8.3",
+    "echarts": "^6.0.0",
+    "echarts-gl": "^2.0.9",
     "vue": "^2.6.14",
     "vue-router": "^3.5.1",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
-    "@babel/eslint-parser": "^7.12.16",
+    "@babel/eslint-parser": "^7.28.6",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",
@@ -29,5 +32,6 @@
     "less-loader": "^8.0.0",
     "prettier": "^2.4.1",
     "vue-template-compiler": "^2.6.14"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }

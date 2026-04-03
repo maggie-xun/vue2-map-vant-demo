@@ -5,32 +5,17 @@
       <!-- 左侧面板 -->
       <div class="panel left-panel">
         <div class="panel-header">可选列表</div>
-        <el-tree
-          ref="leftTree"
-          :data="treeDataSource"
-          :props="defaultProps"
-          node-key="id"
-          show-checkbox
-          default-expand-all
-          @check="handleLeftCheck"
-        >
+        <el-tree ref="leftTree" :data="treeDataSource" :props="defaultProps" node-key="id" show-checkbox
+          default-expand-all @check="handleLeftCheck">
         </el-tree>
       </div>
 
       <!-- 中间穿梭按钮 -->
       <div class="transfer-buttons">
-        <el-button
-          type="primary"
-          :disabled="leftChecked.length === 0"
-          @click="transferToRight"
-        >
+        <el-button type="primary" :disabled="leftChecked.length === 0" @click="transferToRight">
           添加 &gt;
         </el-button>
-        <el-button
-          type="primary"
-          :disabled="rightChecked.length === 0"
-          @click="transferToLeft"
-        >
+        <el-button type="primary" :disabled="rightChecked.length === 0" @click="transferToLeft">
           &lt; 移除
         </el-button>
       </div>
@@ -38,16 +23,8 @@
       <!-- 右侧面板 -->
       <div class="panel right-panel">
         <div class="panel-header">已选列表 ({{ selectedData.length }})</div>
-        <el-tree
-          ref="rightTree"
-          :data="selectedTreeData"
-          :props="defaultProps"
-          node-key="id"
-          show-checkbox
-          default-expand-all
-          :expand-on-click-node="false"
-          @check="handleRightCheck"
-        >
+        <el-tree ref="rightTree" :data="selectedTreeData" :props="defaultProps" node-key="id" show-checkbox
+          default-expand-all :expand-on-click-node="false" @check="handleRightCheck">
           <span class="custom-node" slot-scope="{ node, data }">
             <span>{{ node.label }}</span>
             <span class="remove-btn" @click.stop="removeSingleItem(data.id)">×</span>
@@ -208,19 +185,27 @@ export default {
       const copyTree = JSON.parse(JSON.stringify(this.treeDataSource));
 
       // 过滤：只保留已选中的节点
+
+      // 过滤：只保留已选中的节点，并移除空children
       const filterTree = (nodes) => {
         return nodes
           .filter((node) => this.selectedData.includes(node.id))
           .map((node) => {
             if (node.children) {
+              const filteredChildren = filterTree(node.children);
+              // 如果children为空数组，删除children属性
+              if (filteredChildren.length === 0) {
+                return { ...node, children: [] };
+              }
               return {
                 ...node,
-                children: filterTree(node.children)
+                children: filteredChildren
               };
             }
             return node;
           });
       };
+
 
       this.selectedTreeData = filterTree(copyTree);
     },
@@ -234,10 +219,49 @@ export default {
       }
       return null;
     },
+    // 获取节点的父节点ID
+    getParentId(id, data = this.treeDataSource, parentId = null) {
+      for (const item of data) {
+        if (item.id === id) return parentId;
+        if (item.children) {
+          const found = this.getParentId(id, item.children, item.id);
+          if (found !== null) return found;
+        }
+      }
+      return null;
+    },
+    // 检查节点是否还有子节点在 selectedData 中
+    hasSelectedChildren(parentId) {
+      const parent = this.findNodeById(parentId);
+      if (!parent || !parent.children) return false;
+      return parent.children.some(child => this.selectedData.includes(child.id));
+    },
     removeSingleItem(id) {
       const idx = this.selectedData.indexOf(id);
       if (idx !== -1) {
         this.selectedData.splice(idx, 1);
+
+        // 检查父节点是否还有其他选中的子节点
+        const parentId = this.getParentId(id);
+        if (parentId && !this.hasSelectedChildren(parentId)) {
+          // 父节点没有其他选中子节点，也删除父节点
+          const parentIdx = this.selectedData.indexOf(parentId);
+          if (parentIdx !== -1) {
+            this.selectedData.splice(parentIdx, 1);
+          }
+        }
+
+        // 更新右侧树
+        this.buildSelectedTree();
+        // 更新左侧树选中状态
+        this.$nextTick(() => {
+          if (this.$refs.leftTree) {
+            this.$refs.leftTree.setCheckedKeys([]);
+            this.selectedData.forEach((itemId) => {
+              this.$refs.leftTree.setChecked(itemId, true, false);
+            });
+          }
+        });
       }
     }
   }

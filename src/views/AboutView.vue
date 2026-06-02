@@ -5,8 +5,15 @@
       <!-- 左侧面板 -->
       <div class="panel left-panel">
         <div class="panel-header">可选列表</div>
-        <el-tree ref="leftTree" :data="treeDataSource" :props="defaultProps" node-key="id" show-checkbox
-          default-expand-all @check="handleLeftCheck">
+        <el-tree
+          ref="leftTree"
+          :data="treeDataSource"
+          :props="defaultProps"
+          node-key="id"
+          show-checkbox
+          default-expand-all
+          @check="handleLeftCheck"
+        >
         </el-tree>
       </div>
 
@@ -23,8 +30,16 @@
       <!-- 右侧面板 -->
       <div class="panel right-panel">
         <div class="panel-header">已选列表 ({{ selectedData.length }})</div>
-        <el-tree ref="rightTree" :data="selectedTreeData" :props="defaultProps" node-key="id" show-checkbox
-          default-expand-all :expand-on-click-node="false" @check="handleRightCheck">
+        <el-tree
+          ref="rightTree"
+          :data="selectedTreeData"
+          :props="defaultProps"
+          node-key="id"
+          show-checkbox
+          default-expand-all
+          :expand-on-click-node="false"
+          @check="handleRightCheck"
+        >
           <span class="custom-node" slot-scope="{ node, data }">
             <span>{{ node.label }}</span>
             <span class="remove-btn" @click.stop="removeSingleItem(data.id)">×</span>
@@ -37,95 +52,95 @@
 
 <script>
 export default {
-  name: "AboutView",
+  name: 'AboutView',
   data() {
     return {
       treeDataSource: [
         {
           id: 1,
-          label: "技术部",
+          label: '技术部',
           children: [
             {
               id: 11,
-              label: "前端组",
+              label: '前端组',
               children: [
-                { id: 111, label: "React" },
-                { id: 112, label: "Vue" },
-                { id: 113, label: "Angular" }
-              ]
+                { id: 111, label: 'React' },
+                { id: 112, label: 'Vue' },
+                { id: 113, label: 'Angular' },
+              ],
             },
             {
               id: 12,
-              label: "后端组",
+              label: '后端组',
               children: [
-                { id: 121, label: "Java" },
-                { id: 122, label: "Node.js" },
-                { id: 123, label: "Python" }
-              ]
+                { id: 121, label: 'Java' },
+                { id: 122, label: 'Node.js' },
+                { id: 123, label: 'Python' },
+              ],
             },
             {
               id: 13,
-              label: "运维组",
+              label: '运维组',
               children: [
-                { id: 131, label: "Docker" },
-                { id: 132, label: "Kubernetes" }
-              ]
-            }
-          ]
+                { id: 131, label: 'Docker' },
+                { id: 132, label: 'Kubernetes' },
+              ],
+            },
+          ],
         },
         {
           id: 2,
-          label: "产品部",
+          label: '产品部',
           children: [
             {
               id: 21,
-              label: "产品设计",
+              label: '产品设计',
               children: [
-                { id: 211, label: "UI设计" },
-                { id: 212, label: "交互设计" }
-              ]
+                { id: 211, label: 'UI设计' },
+                { id: 212, label: '交互设计' },
+              ],
             },
             {
               id: 22,
-              label: "产品经理",
+              label: '产品经理',
               children: [
-                { id: 221, label: "需求分析" },
-                { id: 222, label: "项目管理" }
-              ]
-            }
-          ]
+                { id: 221, label: '需求分析' },
+                { id: 222, label: '项目管理' },
+              ],
+            },
+          ],
         },
         {
           id: 3,
-          label: "运营部",
+          label: '运营部',
           children: [
             {
               id: 31,
-              label: "数据分析",
+              label: '数据分析',
               children: [
-                { id: 311, label: "用户分析" },
-                { id: 312, label: "流量分析" }
-              ]
+                { id: 311, label: '用户分析' },
+                { id: 312, label: '流量分析' },
+              ],
             },
             {
               id: 32,
-              label: "市场推广",
+              label: '市场推广',
               children: [
-                { id: 321, label: "SEO优化" },
-                { id: 322, label: "广告投放" }
-              ]
-            }
-          ]
-        }
+                { id: 321, label: 'SEO优化' },
+                { id: 322, label: '广告投放' },
+              ],
+            },
+          ],
+        },
       ],
       selectedData: [],
       selectedTreeData: [],
       defaultProps: {
-        children: "children",
-        label: "label"
+        children: 'children',
+        label: 'label',
       },
       leftChecked: [],
-      rightChecked: []
+      rightChecked: [],
     };
   },
   methods: {
@@ -199,13 +214,12 @@ export default {
               }
               return {
                 ...node,
-                children: filteredChildren
+                children: filteredChildren,
               };
             }
             return node;
           });
       };
-
 
       this.selectedTreeData = filterTree(copyTree);
     },
@@ -234,7 +248,7 @@ export default {
     hasSelectedChildren(parentId) {
       const parent = this.findNodeById(parentId);
       if (!parent || !parent.children) return false;
-      return parent.children.some(child => this.selectedData.includes(child.id));
+      return parent.children.some((child) => this.selectedData.includes(child.id));
     },
     removeSingleItem(id) {
       const idx = this.selectedData.indexOf(id);
@@ -263,8 +277,8 @@ export default {
           }
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

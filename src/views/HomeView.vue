@@ -5,24 +5,23 @@
 </template>
 
 <script>
-import * as echarts from 'echarts'
-import 'echarts-gl'
+import * as echarts from 'echarts';
+import 'echarts-gl';
 
-var option
 export default {
-  name: "HomeView",
+  name: 'HomeView',
   mounted() {
-    this.initChinaMap()
+    this.initChinaMap();
   },
   methods: {
     async initChinaMap() {
-      const chartDom = document.getElementById('chinaMap')
-      const myChart = echarts.init(chartDom)
+      const chartDom = document.getElementById('chinaMap');
+      const myChart = echarts.init(chartDom);
 
       // 获取中国地图 GeoJSON 数据
-      const response = await fetch('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json')
-      const chinaJson = await response.json()
-      echarts.registerMap('china', chinaJson)
+      const response = await fetch('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json');
+      const chinaJson = await response.json();
+      echarts.registerMap('china', chinaJson);
 
       // 各省模拟数据
       const provinceData = [
@@ -60,18 +59,18 @@ export default {
         { name: '拉萨', value: [91.11, 29.97, 80] },
         { name: '西宁', value: [101.74, 36.56, 120] },
         { name: '银川', value: [106.27, 38.47, 140] },
-        { name: '乌鲁木齐', value: [87.68, 43.77, 160] }
-      ]
+        { name: '乌鲁木齐', value: [87.68, 43.77, 160] },
+      ];
 
       const option = {
         tooltip: {
           trigger: 'item',
           formatter: (params) => {
             if (params.value && params.value[2]) {
-              return `${params.name}: ${params.value[2]}`
+              return `${params.name}: ${params.value[2]}`;
             }
-            return params.name
-          }
+            return params.name;
+          },
         },
         geo3D: {
           map: 'china',
@@ -80,50 +79,50 @@ export default {
             color: '#1d4e89',
             opacity: 0.95,
             borderWidth: 0.5,
-            borderColor: '#4db8ff'
+            borderColor: '#4db8ff',
           },
           light: {
             main: {
               intensity: 1.2,
               shadow: true,
-              shadowQuality: 'high'
+              shadowQuality: 'high',
             },
             ambient: {
-              intensity: 0.4
-            }
+              intensity: 0.4,
+            },
           },
           viewControl: {
             autoRotate: false,
             distance: 100,
             alpha: 40,
             beta: 20,
-            center: [0, 0, 0]
+            center: [0, 0, 0],
           },
           label: {
             show: true,
             formatter: '{b}',
             textStyle: {
               color: '#fff',
-              fontSize: 10
-            }
+              fontSize: 10,
+            },
           },
           emphasis: {
             itemStyle: {
-              color: '#ffd700'
+              color: '#ffd700',
             },
             label: {
               show: true,
               textStyle: {
                 color: '#fff',
-                fontSize: 14
-              }
-            }
+                fontSize: 14,
+              },
+            },
           },
           shading: 'realistic',
           realisticMaterial: {
             roughness: 0.6,
-            metalness: 0.1
-          }
+            metalness: 0.1,
+          },
         },
         series: [
           {
@@ -135,21 +134,21 @@ export default {
             silent: true,
             itemStyle: {
               color: '#ff6b6b',
-              opacity: 0.9
+              opacity: 0.9,
             },
             emphasis: {
               itemStyle: {
-                color: '#ffd700'
-              }
-            }
-          }
-        ]
-      }
+                color: '#ffd700',
+              },
+            },
+          },
+        ],
+      };
 
-      myChart.setOption(option)
-    }
-  }
-}
+      myChart.setOption(option);
+    },
+  },
+};
 </script>
 
 <style scoped>
